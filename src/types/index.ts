@@ -40,6 +40,7 @@ export interface Work {
   desc: string;
   year: string;
   tags: string[];
+  href?: string;
 }
 
 

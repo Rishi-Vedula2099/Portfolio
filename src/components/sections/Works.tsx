@@ -9,6 +9,7 @@ import ToriiDivider from "@/components/ui/ToriiDivider";
 function WorkRow({ w, i, dark }: { w: Work; i: number; dark: boolean }) {
     const [hov, setHov] = useState(false);
     const [slashing, setSlashing] = useState(false);
+    const isLL = w.title === "LectureLens";
     const c = dark
         ? {
             muted: "rgba(240,232,218,0.78)",
@@ -32,6 +33,8 @@ function WorkRow({ w, i, dark }: { w: Work; i: number; dark: boolean }) {
                 className="wrow"
                 onMouseEnter={enter}
                 onMouseLeave={() => setHov(false)}
+                onClick={() => w.href && window.open(w.href, "_blank", "noopener,noreferrer")}
+                style={{ cursor: w.href ? "pointer" : "default" }}
             >
                 <div
                     style={{
@@ -177,10 +180,22 @@ function WorkRow({ w, i, dark }: { w: Work; i: number; dark: boolean }) {
                                 className="stag"
                                 style={
                                     hov
-                                        ? {
-                                            borderColor: "rgba(192,57,43,0.28)",
-                                            color: "rgba(192,57,43,0.7)",
-                                        }
+                                        ? isLL
+                                            ? {
+                                                borderColor: "rgba(192,57,43,0.5)",
+                                                color: "#c0392b",
+                                                background: dark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.02)",
+                                                boxShadow: dark
+                                                    ? "8px 8px 16px rgba(0,0,0,0.4), -8px -8px 16px rgba(255,255,255,0.02), inset 4px 4px 8px rgba(255,255,255,0.02), inset -4px -4px 8px rgba(0,0,0,0.4)"
+                                                    : "8px 8px 16px rgba(0,0,0,0.08), -8px -8px 16px rgba(255,255,255,0.8), inset 4px 4px 8px rgba(255,255,255,0.8), inset -4px -4px 8px rgba(0,0,0,0.08)",
+                                                borderRadius: "12px",
+                                                transition: "all 0.4s ease",
+                                                transform: "translateY(-2px)",
+                                            }
+                                            : {
+                                                borderColor: "rgba(192,57,43,0.28)",
+                                                color: "rgba(192,57,43,0.7)",
+                                            }
                                         : {}
                                 }
                             >
@@ -201,22 +216,26 @@ function WorkRow({ w, i, dark }: { w: Work; i: number; dark: boolean }) {
                             }`,
                     }}
                 >
-                    <span
+                    <a
+                        href={w.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         style={{
+                            textDecoration: "none",
                             fontFamily: "'Cormorant Garamond'",
                             fontSize: 22,
-                            color: hov
+                            color: isLL || hov
                                 ? "#c0392b"
                                 : dark
                                     ? "rgba(201,168,76,0.18)"
                                     : "rgba(26,18,8,0.15)",
                             transition: "all 0.35s",
-                            transform: hov ? "translateX(8px)" : "translateX(0)",
+                            transform: hov ? "translateX(8px) scale(1.1)" : "translateX(0) scale(1)",
                             display: "block",
                         }}
                     >
                         →
-                    </span>
+                    </a>
                 </div>
             </div>
         </Wipe>
