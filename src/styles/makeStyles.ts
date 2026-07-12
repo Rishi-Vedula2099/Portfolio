@@ -35,6 +35,7 @@ export const makeStyles = (dark: boolean): string => `
   --about-grid-cols: 1fr 1fr;
   --about-gap: 70px;
   --about-sec-mt: 42px;
+  --contact-grid-cols: 1fr 1fr;
   --section-padding-x: 48px;
 }
 @media (max-width: 1023px) {
@@ -79,6 +80,7 @@ export const makeStyles = (dark: boolean): string => `
     --about-grid-cols: 1fr;
     --about-gap: 32px;
     --about-sec-mt: 16px;
+    --contact-grid-cols: 1fr;
     --section-padding-x: 16px;
   }
 }

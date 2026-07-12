@@ -12,17 +12,74 @@ export default function Contact({ dark }: { dark: boolean }) {
     const [email, setEmail] = useState("");
     const [subject, setSubject] = useState("");
     const [message, setMessage] = useState("");
+    const [showOptions, setShowOptions] = useState(false);
+    const [sendingStatus, setSendingStatus] = useState<"" | "sending" | "success" | "error">("");
 
-    const handleDispatch = () => {
-        const mailto = `mailto:rishivedula93@gmail.com?subject=${encodeURIComponent(
-            subject || "Alliance Proposal"
-        )}&body=${encodeURIComponent(
-            message
-                ? `From: ${name} (${email})\n\n${message}`
-                : "Greetings Rishi, I visited your portfolio and would like to connect."
-        )}`;
-        window.location.href = mailto;
+    const handleDispatchClick = () => {
+        if (!name || !email || !message) {
+            alert("Please complete the parchment (Name, Email, and Message) before sealing.");
+            return;
+        }
+        setShowOptions(true);
+    };
+
+    const handleSendViaGmail = () => {
+        const bodyContent = `From: ${name} <${email}>\n\n${message}`;
+        const url = `https://mail.google.com/mail/?view=cm&fs=1&to=rishivedula93@gmail.com&su=${encodeURIComponent(subject || "Alliance Proposal")}&body=${encodeURIComponent(bodyContent)}`;
+        window.open(url, "_blank", "noopener,noreferrer");
         setFormSent(true);
+    };
+
+    const handleSendViaOutlook = () => {
+        const bodyContent = `From: ${name} <${email}>\n\n${message}`;
+        const url = `https://outlook.live.com/owa/?path=/mail/action/compose&to=rishivedula93@gmail.com&subject=${encodeURIComponent(subject || "Alliance Proposal")}&body=${encodeURIComponent(bodyContent)}`;
+        window.open(url, "_blank", "noopener,noreferrer");
+        setFormSent(true);
+    };
+
+    const handleSendViaMailto = () => {
+        const bodyContent = `From: ${name} <${email}>\n\n${message}`;
+        const url = `mailto:rishivedula93@gmail.com?subject=${encodeURIComponent(subject || "Alliance Proposal")}&body=${encodeURIComponent(bodyContent)}`;
+        window.location.href = url;
+        setFormSent(true);
+    };
+
+    const handleSendViaEmailJS = async () => {
+        setSendingStatus("sending");
+        const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "service_default";
+        const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "template_default";
+        const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "user_default";
+
+        try {
+            const res = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    service_id: serviceId,
+                    template_id: templateId,
+                    user_id: publicKey,
+                    template_params: {
+                        from_name: name,
+                        reply_to: email,
+                        subject: subject || "Alliance Proposal",
+                        message: message,
+                    },
+                }),
+            });
+            if (res.ok) {
+                setSendingStatus("success");
+                setFormSent(true);
+            } else {
+                const text = await res.text();
+                console.error("EmailJS Error Response:", text);
+                setSendingStatus("error");
+                alert("EmailJS transmission failed. You can fallback to composing via Gmail or Outlook below!");
+            }
+        } catch (error) {
+            console.error("EmailJS Network Error:", error);
+            setSendingStatus("error");
+            alert("Direct send failed. You can fallback to composing via Gmail or Outlook!");
+        }
     };
 
     const c = {
@@ -145,78 +202,185 @@ export default function Contact({ dark }: { dark: boolean }) {
                     </div>
                 </Wipe>
                 {!formSent ? (
-                    <Wipe
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: 22,
-                        }}
-                    >
-                        <div
+                    !showOptions ? (
+                        <Wipe
                             style={{
-                                display: "grid",
-                                gridTemplateColumns: "1fr 1fr",
-                                gap: 20,
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: 22,
                             }}
                         >
+                            <div
+                                style={{
+                                    display: "grid",
+                                    gridTemplateColumns: "var(--contact-grid-cols, 1fr 1fr)",
+                                    gap: 20,
+                                }}
+                            >
+                                <input
+                                    suppressHydrationWarning
+                                    className="jinput"
+                                    placeholder="Your Name · 氏名"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                />
+                                <input
+                                    suppressHydrationWarning
+                                    className="jinput"
+                                    placeholder="Email Address · 書状の宛先"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                />
+                            </div>
                             <input
                                 suppressHydrationWarning
                                 className="jinput"
-                                placeholder="Your Name · 氏名"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
+                                placeholder="Mission / Alliance Proposal · 件名"
+                                value={subject}
+                                onChange={(e) => setSubject(e.target.value)}
                             />
-                            <input
+                            <textarea
                                 suppressHydrationWarning
                                 className="jinput"
-                                placeholder="Email Address · 書状の宛先"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                rows={5}
+                                placeholder="Lay out your terms in full. A warrior speaks plainly..."
+                                value={message}
+                                onChange={(e) => setMessage(e.target.value)}
                             />
-                        </div>
-                        <input
-                            suppressHydrationWarning
-                            className="jinput"
-                            placeholder="Mission / Alliance Proposal · 件名"
-                            value={subject}
-                            onChange={(e) => setSubject(e.target.value)}
-                        />
-                        <textarea
-                            suppressHydrationWarning
-                            className="jinput"
-                            rows={5}
-                            placeholder="Lay out your terms in full. A warrior speaks plainly..."
-                            value={message}
-                            onChange={(e) => setMessage(e.target.value)}
-                        />
-                        <button
+                            <button
+                                style={{
+                                    background: "#c0392b",
+                                    color: "#f0e8d8",
+                                    border: "none",
+                                    padding: "15px 34px",
+                                    fontFamily: "'DM Mono'",
+                                    fontSize: 11,
+                                    letterSpacing: 4,
+                                    cursor: "none",
+                                    transition: "background 0.3s,box-shadow 0.3s",
+                                    width: "100%",
+                                }}
+                                onMouseEnter={(e) => {
+                                    const el = e.currentTarget;
+                                    el.style.background = "#a02820";
+                                    el.style.boxShadow = "0 8px 30px rgba(192,57,43,0.4)";
+                                }}
+                                onMouseLeave={(e) => {
+                                    const el = e.currentTarget;
+                                    el.style.background = "#c0392b";
+                                    el.style.boxShadow = "none";
+                                }}
+                                onClick={handleDispatchClick}
+                            >
+                                刀 SEAL &amp; DISPATCH THE SCROLL
+                            </button>
+                        </Wipe>
+                    ) : (
+                        <Wipe
                             style={{
-                                background: "#c0392b",
-                                color: "#f0e8d8",
-                                border: "none",
-                                padding: "15px 34px",
-                                fontFamily: "'DM Mono'",
-                                fontSize: 11,
-                                letterSpacing: 4,
-                                cursor: "none",
-                                transition: "background 0.3s,box-shadow 0.3s",
-                                width: "100%",
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: 16,
                             }}
-                            onMouseEnter={(e) => {
-                                const el = e.currentTarget;
-                                el.style.background = "#a02820";
-                                el.style.boxShadow = "0 8px 30px rgba(192,57,43,0.4)";
-                            }}
-                            onMouseLeave={(e) => {
-                                const el = e.currentTarget;
-                                el.style.background = "#c0392b";
-                                el.style.boxShadow = "none";
-                            }}
-                            onClick={handleDispatch}
                         >
-                            刀 SEAL &amp; DISPATCH THE SCROLL
-                        </button>
-                    </Wipe>
+                            <div style={{ fontFamily: "'Cormorant Garamond'", fontStyle: "italic", fontSize: 18, color: c.paper, marginBottom: 12, textAlign: "center" }}>
+                                Select your courier of choice to deliver the sealed missive:
+                            </div>
+                            
+                            <button
+                                style={{
+                                    background: "#c9a84c",
+                                    color: "#07060c",
+                                    border: "none",
+                                    padding: "14px 30px",
+                                    fontFamily: "'DM Mono'",
+                                    fontSize: 11,
+                                    letterSpacing: 3,
+                                    cursor: "none",
+                                    fontWeight: 700,
+                                    transition: "all 0.3s",
+                                    width: "100%",
+                                }}
+                                onClick={handleSendViaEmailJS}
+                                disabled={sendingStatus === "sending"}
+                            >
+                                {sendingStatus === "sending" ? "TRANSMITTING MISSIVE..." : "SEND DIRECT (EMAILJS REST)"}
+                            </button>
+
+                            <button
+                                style={{
+                                    background: "rgba(255,255,255,0.04)",
+                                    color: c.paper,
+                                    border: `1px solid ${c.paper}33`,
+                                    padding: "14px 30px",
+                                    fontFamily: "'DM Mono'",
+                                    fontSize: 11,
+                                    letterSpacing: 3,
+                                    cursor: "none",
+                                    transition: "all 0.3s",
+                                    width: "100%",
+                                }}
+                                onClick={handleSendViaGmail}
+                            >
+                                SEND VIA GMAIL (WEB APP)
+                            </button>
+
+                            <button
+                                style={{
+                                    background: "rgba(255,255,255,0.04)",
+                                    color: c.paper,
+                                    border: `1px solid ${c.paper}33`,
+                                    padding: "14px 30px",
+                                    fontFamily: "'DM Mono'",
+                                    fontSize: 11,
+                                    letterSpacing: 3,
+                                    cursor: "none",
+                                    transition: "all 0.3s",
+                                    width: "100%",
+                                }}
+                                onClick={handleSendViaOutlook}
+                            >
+                                SEND VIA OUTLOOK (WEB APP)
+                            </button>
+
+                            <button
+                                style={{
+                                    background: "rgba(255,255,255,0.04)",
+                                    color: c.paper,
+                                    border: `1px solid ${c.paper}33`,
+                                    padding: "14px 30px",
+                                    fontFamily: "'DM Mono'",
+                                    fontSize: 11,
+                                    letterSpacing: 3,
+                                    cursor: "none",
+                                    transition: "all 0.3s",
+                                    width: "100%",
+                                }}
+                                onClick={handleSendViaMailto}
+                            >
+                                SEND VIA DEFAULT APP (MAILTO)
+                            </button>
+
+                            <button
+                                style={{
+                                    background: "transparent",
+                                    color: c.faint,
+                                    border: `1px solid ${c.border}`,
+                                    padding: "10px 20px",
+                                    fontFamily: "'DM Mono'",
+                                    fontSize: 9,
+                                    letterSpacing: 2,
+                                    cursor: "none",
+                                    marginTop: 8,
+                                    transition: "all 0.3s",
+                                    width: "100%",
+                                }}
+                                onClick={() => setShowOptions(false)}
+                            >
+                                ← UNSEAL &amp; EDIT PARCHMENT
+                            </button>
+                        </Wipe>
+                    )
                 ) : (
                     <Wipe style={{ textAlign: "center", padding: "48px 0" }}>
                         <div
