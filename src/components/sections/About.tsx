@@ -45,7 +45,7 @@ export default function About({ dark }: { dark: boolean }) {
             style={{
                 maxWidth: 1100,
                 margin: "0 auto",
-                padding: "80px 48px",
+                padding: "80px var(--section-padding-x, 48px)",
                 position: "relative",
                 zIndex: 10,
             }}
@@ -54,8 +54,8 @@ export default function About({ dark }: { dark: boolean }) {
             <Wipe
                 style={{
                     display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: 70,
+                    gridTemplateColumns: "var(--about-grid-cols, 1fr 1fr)",
+                    gap: "var(--about-gap, 70px)" as any,
                     alignItems: "center",
                 }}
             >
@@ -124,7 +124,7 @@ export default function About({ dark }: { dark: boolean }) {
                     </div>
                 </div>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: 24, marginTop: 42 }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 24, marginTop: "var(--about-sec-mt, 42px)" }}>
                     <XpCard dark={dark}>
                         {(hov) => (
                             <div style={{ display: "flex", alignItems: "center", gap: 24, position: "relative", zIndex: 1, width: "100%" }}>

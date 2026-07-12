@@ -44,7 +44,7 @@ export default function Contact({ dark }: { dark: boolean }) {
                 backdropFilter: "blur(4px)",
             }}
         >
-            <div style={{ maxWidth: 660, margin: "0 auto", padding: "0 48px" }}>
+            <div style={{ maxWidth: 660, margin: "0 auto", padding: "0 var(--section-padding-x, 48px)" }}>
                 <ToriiDivider label="書状 · WAR MISSIVE" dark={dark} />
                 <Wipe style={{ textAlign: "center", marginBottom: 52 }}>
                     <div style={{ marginBottom: 18 }}>

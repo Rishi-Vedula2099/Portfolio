@@ -18,14 +18,20 @@ export default function STDetail({
     return (
         <div
             style={{
-                width: "260px",
+                width: "var(--st-detail-width, 260px)",
                 flexShrink: 0,
-                position: "relative",
+                position: "var(--st-detail-position, relative)" as any,
+                top: 0,
+                bottom: 0,
+                right: 0,
                 zIndex: 10,
                 background: dark
                     ? "linear-gradient(160deg,#0C0D1A 0%,#060710 100%)"
                     : "linear-gradient(160deg,rgba(235,225,208,0.97) 0%,rgba(245,238,224,0.97) 100%)",
-                borderLeft: `1px solid ${color}44`,
+                borderLeft: "var(--st-detail-border-left, 1px solid)" as any,
+                borderLeftColor: color + "44",
+                borderTop: "var(--st-detail-border-top, none)" as any,
+                borderTopColor: color + "44",
                 display: "flex",
                 flexDirection: "column",
                 animation: "stPanelIn 0.4s cubic-bezier(.4,0,.2,1) both",

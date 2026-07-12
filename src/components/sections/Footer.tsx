@@ -17,7 +17,7 @@ export default function Footer({ dark, onCloseScrollAction }: FooterProps) {
             style={{
                 maxWidth: 1100,
                 margin: "0 auto",
-                padding: "56px 48px 44px",
+                padding: "56px var(--section-padding-x, 48px) 44px",
                 position: "relative",
                 zIndex: 10,
             }}

@@ -91,7 +91,7 @@ export default function SkillTreeWidget({ dark }: { dark: boolean }) {
         <div
             style={{
                 width: "100%",
-                height: "560px",
+                height: "var(--st-widget-height, 560px)",
                 background: bg,
                 backdropFilter: "blur(12px)",
                 border: `1px solid ${tree.color}22`,
@@ -298,6 +298,7 @@ export default function SkillTreeWidget({ dark }: { dark: boolean }) {
                 style={{
                     flex: 1,
                     display: "flex",
+                    flexDirection: "var(--st-flex-direction, row)" as any,
                     overflow: "hidden",
                     position: "relative",
                     zIndex: 2,
@@ -306,16 +307,21 @@ export default function SkillTreeWidget({ dark }: { dark: boolean }) {
                 {/* Segment tabs */}
                 <div
                     style={{
-                        width: 76,
+                        width: "var(--st-tabs-width, 76px)",
                         flexShrink: 0,
-                        borderRight: "1px solid rgba(255,255,255,0.05)",
+                        borderRight: dark
+                            ? "var(--st-detail-border-left-dark, 1px solid rgba(255,255,255,0.05))"
+                            : "var(--st-detail-border-left-light, 1px solid rgba(26,18,8,0.08))",
+                        borderBottom: dark
+                            ? "var(--st-detail-border-top-dark, none)"
+                            : "var(--st-detail-border-top-light, none)",
                         background: catBg,
                         display: "flex",
-                        flexDirection: "column",
+                        flexDirection: "var(--st-tabs-flex-direction, column)" as any,
                         alignItems: "center",
                         justifyContent: "center",
                         gap: 4,
-                        padding: "8px 0",
+                        padding: "var(--st-tabs-padding, 8px 0)",
                     }}
                 >
                     {TREES.map((t, i) => {

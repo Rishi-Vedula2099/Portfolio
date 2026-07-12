@@ -16,7 +16,7 @@ export default function Skills({ dark }: { dark: boolean }) {
                 padding: "80px 0",
             }}
         >
-            <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 48px" }}>
+            <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 var(--section-padding-x, 48px)" }}>
                 <ToriiDivider label="技芸 · DISCIPLINES" dark={dark} />
                 <Wipe>
                     <SkillTreeWidget dark={dark} />

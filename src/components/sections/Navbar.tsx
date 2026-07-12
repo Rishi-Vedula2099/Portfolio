@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import HangingLampToggle from "@/components/ui/HangingLampToggle";
 
 interface NavbarProps {
@@ -12,6 +12,26 @@ interface NavbarProps {
 
 export default function Navbar({ dark, loaded, scrolled, onToggleAction }: NavbarProps) {
     const [hankoHov, setHankoHov] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
+
+    useEffect(() => {
+        if (menuOpen) {
+            document.body.classList.add("no-scroll");
+        } else {
+            document.body.classList.remove("no-scroll");
+        }
+        return () => {
+            document.body.classList.remove("no-scroll");
+        };
+    }, [menuOpen]);
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") setMenuOpen(false);
+        };
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, []);
 
     const c = {
         muted: dark ? "rgba(240,232,218,0.82)" : "rgba(180,35,10,0.9)",
@@ -30,7 +50,7 @@ export default function Navbar({ dark, loaded, scrolled, onToggleAction }: Navba
                 zIndex: 500,
                 display: "flex",
                 alignItems: "center",
-                padding: "16px 48px",
+                padding: scrolled ? "12px var(--nav-px, 48px)" : "16px var(--nav-px, 48px)",
                 background: scrolled
                     ? dark
                         ? "rgba(7,6,12,0.92)"
@@ -38,6 +58,7 @@ export default function Navbar({ dark, loaded, scrolled, onToggleAction }: Navba
                     : "transparent",
                 backdropFilter: scrolled ? "blur(18px)" : "none",
                 borderBottom: scrolled
+
                     ? `1px solid ${c.border}`
                     : "1px solid transparent",
                 transition: "all 0.5s",
@@ -87,20 +108,61 @@ export default function Navbar({ dark, loaded, scrolled, onToggleAction }: Navba
             >
                 RISHI VEDULA
             </div>
-            {["Works", "Skills", "About", "Contact"].map((n) => (
-                <a
-                    key={n}
-                    href="#"
-                    className="nlink2"
-                    onClick={(e) => {
-                        e.preventDefault();
-                        scrollTo(n.toLowerCase());
-                    }}
-                >
-                    {n}
-                </a>
-            ))}
-            <div style={{ marginLeft: 30 }}>
+            
+            {/* Desktop Navigation Links */}
+            <div className="desktop-nav-links" style={{ display: "flex", alignItems: "center" }}>
+                {["Works", "Skills", "About", "Contact"].map((n) => (
+                    <a
+                        key={n}
+                        href="#"
+                        className="nlink2"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            scrollTo(n.toLowerCase());
+                        }}
+                    >
+                        {n}
+                    </a>
+                ))}
+            </div>
+
+            {/* Mobile Hamburger Button */}
+            <button
+                className={`mob-menu-btn ${menuOpen ? "open" : ""}`}
+                onClick={() => setMenuOpen(!menuOpen)}
+                aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
+                aria-expanded={menuOpen}
+            >
+                <span />
+                <span />
+                <span />
+            </button>
+
+            {/* Mobile Navigation Overlay */}
+            <div 
+                className={`mob-menu-overlay ${menuOpen ? "open" : ""}`}
+                role="dialog"
+                aria-modal="true"
+                aria-label="Navigation drawer"
+            >
+                {["Works", "Skills", "About", "Contact"].map((n) => (
+                    <a
+                        key={n}
+                        href="#"
+                        className="mob-nlink"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            setMenuOpen(false);
+                            // small delay to let overlay transition complete smoothly
+                            setTimeout(() => scrollTo(n.toLowerCase()), 350);
+                        }}
+                    >
+                        {n}
+                    </a>
+                ))}
+            </div>
+
+            <div style={{ marginLeft: 30, zIndex: 1002 }}>
                 <HangingLampToggle dark={dark} onToggleAction={onToggleAction} />
             </div>
         </nav>

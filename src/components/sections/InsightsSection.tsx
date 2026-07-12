@@ -155,7 +155,7 @@ export default function InsightsSection({ dark }: { dark: boolean }) {
 
     return (
         <section id="insights" style={{ padding: "80px 0", position: "relative", zIndex: 10 }}>
-            <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 48px" }}>
+            <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 var(--section-padding-x, 48px)" }}>
                 <ToriiDivider label="心法 · CORE INSIGHTS" dark={dark} />
 
                 {/* subtitle */}
@@ -192,7 +192,7 @@ export default function InsightsSection({ dark }: { dark: boolean }) {
                 <div ref={scrollRef} onScroll={updateArrows} style={{
                     display: "flex", gap: 22,
                     overflowX: "auto", overflowY: "visible",
-                    padding: "16px 48px 28px",
+                    padding: "16px var(--section-padding-x, 48px) 28px",
                     scrollbarWidth: "none",
                     msOverflowStyle: "none",
                 }}>
@@ -204,7 +204,7 @@ export default function InsightsSection({ dark }: { dark: boolean }) {
                 </div>
 
                 {/* Navigation arrows */}
-                <div style={{ display: "flex", justifyContent: "center", gap: 14, marginTop: 16, padding: "0 48px" }}>
+                <div style={{ display: "flex", justifyContent: "center", gap: 14, marginTop: 16, padding: "0 var(--section-padding-x, 48px)" }}>
                     {["←", "→"].map((arrow, i) => (
                         <button key={arrow} onClick={() => scroll(i === 0 ? -1 : 1)} style={{
                             width: 42, height: 42, display: "flex", alignItems: "center", justifyContent: "center",

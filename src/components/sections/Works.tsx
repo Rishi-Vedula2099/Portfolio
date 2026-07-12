@@ -107,7 +107,7 @@ function WorkRow({ w, i, dark }: { w: Work; i: number; dark: boolean }) {
                         {w.en}
                     </div>
                 </div>
-                <div style={{ padding: "32px 36px" }}>
+                <div style={{ padding: "var(--wrow-padding, 32px 36px)" }}>
                     <div
                         style={{
                             fontFamily: "'DM Mono'",
@@ -209,11 +209,10 @@ function WorkRow({ w, i, dark }: { w: Work; i: number; dark: boolean }) {
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "flex-end",
-                        padding: "32px 36px",
-                        borderLeft: `1px solid ${dark
-                            ? "rgba(201,168,76,0.06)"
-                            : "rgba(26,18,8,0.07)"
-                            }`,
+                        padding: "var(--wrow-padding, 32px 36px)",
+                        borderLeft: dark
+                            ? "var(--wrow-border-left-dark, 1px solid rgba(201,168,76,0.06))"
+                            : "var(--wrow-border-left-light, 1px solid rgba(26,18,8,0.07))",
                     }}
                 >
                     <a
@@ -249,7 +248,7 @@ export default function Works({ dark }: { dark: boolean }) {
             style={{
                 maxWidth: 1100,
                 margin: "0 auto",
-                padding: "0 48px 90px",
+                padding: "0 var(--section-padding-x, 48px) 90px",
                 position: "relative",
                 zIndex: 10,
             }}

@@ -3,6 +3,85 @@ export const makeStyles = (dark: boolean): string => `
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&family=Noto+Serif+JP:wght@200;300;400&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Zen+Old+Mincho:wght@400;700;900&family=Shippori+Mincho+B1:wght@400;500;700;800&family=Cinzel:wght@400;600;700&display=swap');
 
 .sjp2*,.sjp2*::before,.sjp2*::after{box-sizing:border-box;margin:0;padding:0}
+:root {
+  --nav-px: 48px;
+  --hero-padding: 100px 48px 80px;
+  --hero-grid-cols: 1fr 270px;
+  --hero-sidebar-display: block;
+  --hero-text-align: left;
+  --hero-btn-flex: row;
+  --hero-btn-align: flex-start;
+  --hero-writing-mode: vertical-rl;
+  --hero-writing-letter-spacing: 10px;
+  --hero-writing-margin: 30px;
+  --hero-para-margin: 0 0 42px;
+  --hero-line-justify: flex-start;
+  --hero-line-margin: 16px 0 24px;
+  --wrow-padding: 32px 36px;
+  --wrow-border-left-dark: 1px solid rgba(201,168,76,0.06);
+  --wrow-border-left-light: 1px solid rgba(26,18,8,0.07);
+  --st-flex-direction: row;
+  --st-tabs-width: 76px;
+  --st-tabs-flex-direction: column;
+  --st-tabs-padding: 8px 0;
+  --st-detail-position: relative;
+  --st-detail-width: 260px;
+  --st-detail-border-left: 1px solid;
+  --st-detail-border-top: none;
+  --st-widget-height: 560px;
+  --ap-flex-direction: row;
+  --ap-card-height: 480px;
+  --ap-card-min-height: 480px;
+  --about-grid-cols: 1fr 1fr;
+  --about-gap: 70px;
+  --about-sec-mt: 42px;
+  --section-padding-x: 48px;
+}
+@media (max-width: 1023px) {
+  :root {
+    --nav-px: 24px;
+    --hero-padding: 80px 24px 60px;
+    --wrow-padding: 24px 28px;
+    --about-gap: 40px;
+    --section-padding-x: 24px;
+  }
+}
+@media (max-width: 767px) {
+  :root {
+    --nav-px: 16px;
+    --hero-padding: 60px 16px 40px;
+    --hero-grid-cols: 1fr;
+    --hero-sidebar-display: none;
+    --hero-text-align: center;
+    --hero-btn-flex: column;
+    --hero-btn-align: center;
+    --hero-writing-mode: horizontal-tb;
+    --hero-writing-letter-spacing: 4px;
+    --hero-writing-margin: 16px;
+    --hero-para-margin: 0 auto 42px;
+    --hero-line-justify: center;
+    --hero-line-margin: 16px auto 24px;
+    --wrow-padding: 16px 20px;
+    --wrow-border-left-dark: none;
+    --wrow-border-left-light: none;
+    --st-flex-direction: column;
+    --st-tabs-width: 100%;
+    --st-tabs-flex-direction: row;
+    --st-tabs-padding: 6px 6px;
+    --st-detail-position: absolute;
+    --st-detail-width: 100%;
+    --st-detail-border-left: none;
+    --st-detail-border-top: 1px solid;
+    --st-widget-height: 640px;
+    --ap-flex-direction: column;
+    --ap-card-height: auto;
+    --ap-card-min-height: 180px;
+    --about-grid-cols: 1fr;
+    --about-gap: 32px;
+    --about-sec-mt: 16px;
+    --section-padding-x: 16px;
+  }
+}
 .sjp2{font-family:'Cormorant Garamond',Georgia,serif;background:${dark ? "#07060c" : "#f0e8d8"};min-height:100vh;color:${dark ? "#e8e0d0" : "#1a1208"};overflow-x:hidden;position:relative;cursor:none;transition:background 0.8s,color 0.8s;scroll-behavior:smooth;}
 
 @keyframes rodInL{0%{transform:translateX(-120%) scaleY(0.2) rotate(-3deg);opacity:0}60%{transform:translateX(0) scaleY(1) rotate(0deg);opacity:1}100%{transform:translateX(0) scaleY(1) rotate(0deg);opacity:1}}
@@ -120,6 +199,130 @@ textarea.jinput:focus{border-color:#c0392b;}
 ::-webkit-scrollbar{width:3px;}
 ::-webkit-scrollbar-track{background:${dark ? "#07060c" : "#f0e8d8"};}
 ::-webkit-scrollbar-thumb{background:#c0392b;border-radius:2px;}
+
+/* ── RESPONSIVE STYLING & MOBILE MENU ─────────────────────── */
+body.no-scroll {
+  overflow: hidden !important;
+  touch-action: none;
+  -webkit-overflow-scrolling: none;
+}
+
+.mob-menu-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  z-index: 1001;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  transition: background 0.3s;
+}
+
+.mob-menu-btn:hover {
+  background: ${dark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"};
+}
+
+.mob-menu-btn span {
+  display: block;
+  position: absolute;
+  height: 2px;
+  width: 20px;
+  background: ${dark ? "#e8e0d0" : "#1a1208"};
+  border-radius: 9px;
+  opacity: 1;
+  left: 12px;
+  transform: rotate(0deg);
+  transition: .25s ease-in-out;
+}
+
+.mob-menu-btn span:nth-child(1) { top: 15px; }
+.mob-menu-btn span:nth-child(2) { top: 21px; }
+.mob-menu-btn span:nth-child(3) { top: 27px; }
+
+.mob-menu-btn.open span:nth-child(1) {
+  top: 21px;
+  transform: rotate(135deg);
+}
+.mob-menu-btn.open span:nth-child(2) {
+  opacity: 0;
+  left: -20px;
+}
+.mob-menu-btn.open span:nth-child(3) {
+  top: 21px;
+  transform: rotate(-135deg);
+}
+
+.mob-menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: ${dark ? "rgba(7,6,12,0.96)" : "rgba(240,232,216,0.98)"};
+  backdrop-filter: blur(20px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.mob-menu-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mob-nlink {
+  font-family: 'Zen Old Mincho', 'Shippori Mincho B1', serif;
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: 4px;
+  color: ${dark ? "#e8e0d0" : "#1a1208"};
+  text-decoration: none;
+  transition: color 0.3s, transform 0.3s;
+  padding: 10px 20px;
+}
+
+.mob-nlink:hover, .mob-nlink:focus {
+  color: #c0392b;
+  transform: scale(1.05);
+}
+
+/* Responsive Grid/Flex Utilities */
+@media (max-width: 1023px) {
+  .wrow {
+    grid-template-columns: 60px 1fr 100px;
+  }
+}
+
+@media (max-width: 767px) {
+  .mob-menu-btn {
+    display: flex;
+  }
+  .desktop-nav-links {
+    display: none !important;
+  }
+  .wrow {
+    grid-template-columns: 1fr;
+    border-right: none;
+  }
+  .wrow > div:first-child {
+    border-right: none;
+    border-bottom: 1px solid ${dark ? "rgba(201,168,76,0.06)" : "rgba(26,18,8,0.07)"};
+    padding: 16px 0;
+    flex-direction: row !important;
+    gap: 12px;
+  }
+  .wrow > div:first-child > div:last-child {
+    margin-top: 0 !important;
+  }
+}
 
 /* ── LIGHT MODE ADJUSTMENTS ── */
 ${!dark ? "" : ""}

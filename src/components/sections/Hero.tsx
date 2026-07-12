@@ -27,11 +27,11 @@ export default function Hero({ dark, loaded }: HeroProps) {
             style={{
                 minHeight: "94vh",
                 display: "grid",
-                gridTemplateColumns: "1fr 270px",
+                gridTemplateColumns: "var(--hero-grid-cols, 1fr 270px)",
                 alignItems: "center",
                 maxWidth: 1100,
                 margin: "0 auto",
-                padding: "100px 48px 80px",
+                padding: "var(--hero-padding, 100px 48px 80px)",
                 position: "relative",
                 zIndex: 10,
                 gap: 0,
@@ -41,17 +41,18 @@ export default function Hero({ dark, loaded }: HeroProps) {
                 style={{
                     animation: loaded ? "inkDrop 1s 0.2s ease both" : "none",
                     opacity: loaded ? undefined : 0,
+                    textAlign: "var(--hero-text-align, left)" as any,
                 }}
             >
                 <div
                     style={{
-                        writingMode: "vertical-rl",
+                        writingMode: "var(--hero-writing-mode, vertical-rl)" as any,
                         fontFamily: "'Noto Serif JP'",
                         fontWeight: 200,
                         fontSize: 11,
                         color: c.faint,
-                        letterSpacing: 10,
-                        marginBottom: 30,
+                        letterSpacing: "var(--hero-writing-letter-spacing, 10px)",
+                        marginBottom: "var(--hero-writing-margin, 30px)",
                         display: "inline-block",
                         animation: loaded ? "brushIn 1.4s 0.5s ease both" : "none",
                     }}
@@ -86,7 +87,8 @@ export default function Hero({ dark, loaded }: HeroProps) {
                     style={{
                         display: "flex",
                         alignItems: "center",
-                        margin: "16px 0 24px",
+                        justifyContent: "var(--hero-line-justify, flex-start)" as any,
+                        margin: "var(--hero-line-margin, 16px 0 24px)",
                         animation: loaded ? "inkDrop 0.5s 1s ease both" : "none",
                         opacity: loaded ? undefined : 0,
                     }}
@@ -121,7 +123,7 @@ export default function Hero({ dark, loaded }: HeroProps) {
                         lineHeight: 1.9,
                         color: c.sub,
                         maxWidth: 440,
-                        marginBottom: 42,
+                        margin: "var(--hero-para-margin, 0 0 42px)",
                         animation: loaded ? "inkDrop 0.8s 0.75s ease both" : "none",
                         opacity: loaded ? undefined : 0,
                     }}
@@ -132,6 +134,8 @@ export default function Hero({ dark, loaded }: HeroProps) {
                 <div
                     style={{
                         display: "flex",
+                        flexDirection: "var(--hero-btn-flex, row)" as any,
+                        justifyContent: "var(--hero-btn-align, flex-start)" as any,
                         gap: 18,
                         alignItems: "center",
                         animation: loaded ? "inkDrop 0.7s 1s ease both" : "none",
@@ -176,6 +180,7 @@ export default function Hero({ dark, loaded }: HeroProps) {
             {/* Skills sidebar */}
             <div
                 style={{
+                    display: "var(--hero-sidebar-display, block)",
                     borderLeft: `1px solid ${c.border}`,
                     paddingLeft: 36,
                     paddingTop: 4,

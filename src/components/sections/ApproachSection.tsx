@@ -48,7 +48,7 @@ function ApproachCard({ ap, active, onClick, dark }: { ap: any; active: boolean;
         <div className={`approach-card${isActive ? " expanded" : ""}`}
             onClick={onClick}
             style={{
-                minHeight: 480,
+                minHeight: "var(--ap-card-min-height, 480px)" as any,
                 background: isActive
                     ? `linear-gradient(160deg, ${dark ? "rgba(15, 14, 28, 0.4)" : "rgba(248, 242, 232, 0.4)"} 0%, ${dark ? "rgba(8, 7, 22, 0.6)" : "rgba(240, 232, 212, 0.6)"} 100%)`
                     : dark ? "rgba(9, 8, 15, 0.3)" : "rgba(237, 229, 212, 0.3)",
@@ -183,7 +183,7 @@ export default function ApproachSection({ dark }: { dark: boolean }) {
             padding: "80px 0",
             backdropFilter: "blur(4px)",
         }}>
-            <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 48px" }}>
+            <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 var(--section-padding-x, 48px)" }}>
                 <ToriiDivider label="武士の道 · MY APPROACH" dark={dark} />
 
                 {/* Intro */}
@@ -211,7 +211,7 @@ export default function ApproachSection({ dark }: { dark: boolean }) {
 
                 {/* Phase cards */}
                 <Wipe>
-                    <div style={{ display: "flex", gap: 16, alignItems: "stretch", minHeight: 480 }}>
+                    <div style={{ display: "flex", flexDirection: "var(--ap-flex-direction, row)" as any, gap: 16, alignItems: "stretch", minHeight: "var(--ap-card-height, 480px)" as any }}>
                         {APPROACHES.map((ap, i) => (
                             <ApproachCard
                                 key={ap.phase}
