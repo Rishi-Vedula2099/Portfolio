@@ -150,8 +150,24 @@ export default function Hero({ dark, loaded }: HeroProps) {
                         confirmedLabel="SCROLL ACQUIRED ✓"
                         dark={dark}
                         color="#5BBF8E"
-                        onClick={() => {
-                            // Dummy dl or link
+                        ariaLabel="Download Rishi Vedula's CV in PDF format"
+                        title="Download CV"
+                        onClick={async () => {
+                            try {
+                                const response = await fetch("/resume/Rishi_Vedula_Resume.pdf", { method: "HEAD" });
+                                if (response.ok) {
+                                    const link = document.createElement("a");
+                                    link.href = "/resume/Rishi_Vedula_Resume.pdf";
+                                    link.download = "Rishi_Vedula_Resume.pdf";
+                                    document.body.appendChild(link);
+                                    link.click();
+                                    document.body.removeChild(link);
+                                } else {
+                                    alert("Resume file is currently unavailable. Please try again later!");
+                                }
+                            } catch (error) {
+                                alert("Failed to download resume. Please check your connection and try again.");
+                            }
                         }}
                     />
                 </div>

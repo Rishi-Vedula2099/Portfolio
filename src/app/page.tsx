@@ -14,7 +14,6 @@ import SnowEffect from "@/components/effects/SnowEffect";
 
 /* Loader / Outro */
 import MegaLoader from "@/components/loader/MegaLoader";
-import ScrollCloseOutro from "@/components/loader/ScrollCloseOutro";
 
 /* Sections */
 import Navbar from "@/components/sections/Navbar";
@@ -32,7 +31,6 @@ export default function SamuraiPortfolio() {
   const [loaded, setLoaded] = useState(false);
   const [dark, setDark] = useState(true);
   const [scrolled, setScrolled] = useState(false);
-  const [closingScroll, setClosingScroll] = useState(false);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 40);
@@ -51,8 +49,7 @@ export default function SamuraiPortfolio() {
     };
 
   const handleCloseScroll = useCallback(() => {
-    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
-    setTimeout(() => setClosingScroll(true), 60);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
   return (
@@ -152,9 +149,6 @@ export default function SamuraiPortfolio() {
       </div>
 
       {!loaded && <MegaLoader onDone={() => setLoaded(true)} />}
-      {closingScroll && (
-        <ScrollCloseOutro onDone={() => setClosingScroll(false)} />
-      )}
       <ScrollProgress />
 
       <Navbar

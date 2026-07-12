@@ -8,6 +8,8 @@ interface SwordDrawButtonProps {
     dark?: boolean;
     color?: string;
     onClick?: () => void;
+    ariaLabel?: string;
+    title?: string;
 }
 
 export default function SwordDrawButton({
@@ -16,6 +18,8 @@ export default function SwordDrawButton({
     dark = true,
     color = "#c9a84c", // default gold
     onClick,
+    ariaLabel,
+    title,
 }: SwordDrawButtonProps) {
     const [pressed, setPressed] = useState(false);
     const [shudder, setShudder] = useState(false);
@@ -40,13 +44,25 @@ export default function SwordDrawButton({
         }, 150);
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            handlePress();
+        }
+    };
+
     const bg = dark ? "rgba(26,18,8,0.8)" : "rgba(240,232,218,0.8)";
     const border = dark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)";
     const textCol = dark ? "#f0e8d8" : "#1a1208";
 
     return (
         <div
+            role="button"
+            tabIndex={0}
+            aria-label={ariaLabel || label}
+            title={title}
             onClick={handlePress}
+            onKeyDown={handleKeyDown}
             onMouseEnter={(e) => {
                 if (!pressed) {
                     e.currentTarget.style.transform = "translateX(4px)";
@@ -72,6 +88,7 @@ export default function SwordDrawButton({
                 transition: "all 0.3s cubic-bezier(0.25, 1, 0.5, 1)",
                 transform: shudder ? "translateX(-2px) rotate(1deg)" : "translateX(0)",
                 minWidth: 200,
+                outline: "none",
             }}
         >
             {/* The Grip (Tsuka) */}
