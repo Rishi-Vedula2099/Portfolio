@@ -3,12 +3,16 @@
 import Wipe from "@/components/ui/Wipe";
 import ToriiDivider from "@/components/ui/ToriiDivider";
 import { useState } from "react";
+import { triggerSystem } from "@/lib/kai/triggerSystem";
 
 function XpCard({ children, dark, plain = false }: { children: (hov: boolean) => React.ReactNode, dark: boolean, plain?: boolean }) {
     const [hov, setHov] = useState(false);
     return (
         <div
-            onMouseEnter={() => setHov(true)}
+            onMouseEnter={() => {
+                setHov(true);
+                triggerSystem.triggerResumeHover();
+            }}
             onMouseLeave={() => setHov(false)}
             style={{
                 transition: "all 0.4s cubic-bezier(0.22, 1, 0.36, 1)",

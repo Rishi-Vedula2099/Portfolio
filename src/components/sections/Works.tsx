@@ -6,6 +6,8 @@ import { WORKS } from "@/data";
 import Wipe from "@/components/ui/Wipe";
 import ToriiDivider from "@/components/ui/ToriiDivider";
 
+import { triggerSystem } from "@/lib/kai/triggerSystem";
+
 function WorkRow({ w, i, dark }: { w: Work; i: number; dark: boolean }) {
     const [hov, setHov] = useState(false);
     const [slashing, setSlashing] = useState(false);
@@ -24,6 +26,7 @@ function WorkRow({ w, i, dark }: { w: Work; i: number; dark: boolean }) {
     const enter = () => {
         setHov(true);
         setSlashing(true);
+        triggerSystem.triggerProjectHover(w.title, w.desc);
         setTimeout(() => setSlashing(false), 500);
     };
 

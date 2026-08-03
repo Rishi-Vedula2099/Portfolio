@@ -27,6 +27,10 @@ import Footer from "@/components/sections/Footer";
 import InsightsSection from "@/components/sections/InsightsSection";
 import ApproachSection from "@/components/sections/ApproachSection";
 
+/* KAI (Knowledge & Adaptive Intelligence) Companion */
+import KaiBot from "@/components/kai/KaiBot";
+import KaiHighlightOverlay from "@/components/kai/KaiHighlightOverlay";
+
 export default function SamuraiPortfolio() {
   const [loaded, setLoaded] = useState(false);
   const [dark, setDark] = useState(true);
@@ -165,6 +169,10 @@ export default function SamuraiPortfolio() {
       <About dark={dark} />
       <Contact dark={dark} />
       <Footer dark={dark} onCloseScrollAction={handleCloseScroll} />
+
+      {/* KAI Intelligent Companion & Highlight Overlay */}
+      <KaiHighlightOverlay />
+      {loaded && <KaiBot dark={dark} />}
     </div>
   );
 }
