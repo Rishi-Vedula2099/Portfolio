@@ -75,8 +75,8 @@ export default function KaiBot({ dark }: { dark: boolean }) {
       aria-label="KAI Digital Companion"
       style={{
         position: "fixed",
-        bottom: 24,
-        left: 24,
+        bottom: 16,
+        left: 16,
         zIndex: 900,
         display: "flex",
         flexDirection: "column",
@@ -88,16 +88,16 @@ export default function KaiBot({ dark }: { dark: boolean }) {
       {ctxState.isChatOpen && (
         <div
           style={{
-            width: 360,
-            maxHeight: 520,
-            marginBottom: 16,
+            width: 310,
+            maxHeight: 430,
+            marginBottom: 12,
             background: dark ? "rgba(14, 14, 18, 0.94)" : "rgba(250, 246, 238, 0.95)",
             backdropFilter: "blur(20px)",
             border: dark ? "1px solid rgba(201, 168, 76, 0.25)" : "1px solid rgba(192, 57, 43, 0.2)",
-            borderRadius: 16,
+            borderRadius: 14,
             boxShadow: dark
-              ? "0 20px 50px rgba(0,0,0,0.7), 0 0 20px rgba(0, 240, 255, 0.12)"
-              : "0 20px 50px rgba(0,0,0,0.15), 0 0 20px rgba(192, 57, 43, 0.08)",
+              ? "0 16px 40px rgba(0,0,0,0.7), 0 0 20px rgba(0, 240, 255, 0.12)"
+              : "0 16px 40px rgba(0,0,0,0.15), 0 0 20px rgba(192, 57, 43, 0.08)",
             display: "flex",
             flexDirection: "column",
             overflow: "hidden",
@@ -114,7 +114,7 @@ export default function KaiBot({ dark }: { dark: boolean }) {
           {/* Panel Header */}
           <div
             style={{
-              padding: "14px 18px",
+              padding: "10px 14px",
               borderBottom: dark ? "1px solid rgba(201, 168, 76, 0.12)" : "1px solid rgba(0,0,0,0.08)",
               display: "flex",
               alignItems: "center",
@@ -122,11 +122,11 @@ export default function KaiBot({ dark }: { dark: boolean }) {
               background: dark ? "rgba(20, 20, 26, 0.6)" : "rgba(240, 235, 224, 0.6)",
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <div
                 style={{
-                  width: 10,
-                  height: 10,
+                  width: 8,
+                  height: 8,
                   borderRadius: "50%",
                   background:
                     ctxState.mascotState === "listening"
@@ -136,13 +136,13 @@ export default function KaiBot({ dark }: { dark: boolean }) {
                       : ctxState.mascotState === "talking"
                       ? "#00F0FF"
                       : "#C9A84C",
-                  boxShadow: "0 0 8px currentColor",
+                  boxShadow: "0 0 6px currentColor",
                 }}
               />
               <span
                 style={{
                   fontFamily: "'Shippori Mincho B1', serif",
-                  fontSize: 14,
+                  fontSize: 12,
                   fontWeight: 700,
                   letterSpacing: "0.1em",
                   color: dark ? "#e8e0d0" : "#1a1208",
@@ -152,9 +152,9 @@ export default function KaiBot({ dark }: { dark: boolean }) {
               </span>
               <span
                 style={{
-                  fontSize: 9,
-                  letterSpacing: "0.15em",
-                  padding: "2px 6px",
+                  fontSize: 8,
+                  letterSpacing: "0.12em",
+                  padding: "1px 5px",
                   borderRadius: 4,
                   background: "rgba(0, 240, 255, 0.1)",
                   color: "#00F0FF",
@@ -166,7 +166,7 @@ export default function KaiBot({ dark }: { dark: boolean }) {
               </span>
             </div>
 
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
               {/* Mute Button */}
               <button
                 type="button"
@@ -177,8 +177,8 @@ export default function KaiBot({ dark }: { dark: boolean }) {
                   border: "none",
                   color: ctxState.isMuted ? "#E63946" : dark ? "rgba(232, 224, 208, 0.7)" : "#1a1208",
                   cursor: "pointer",
-                  fontSize: 14,
-                  padding: 4,
+                  fontSize: 12,
+                  padding: 2,
                 }}
               >
                 {ctxState.isMuted ? "🔇" : "🔊"}
@@ -193,8 +193,8 @@ export default function KaiBot({ dark }: { dark: boolean }) {
                   border: "none",
                   color: dark ? "rgba(232, 224, 208, 0.6)" : "#1a1208",
                   cursor: "pointer",
-                  fontSize: 16,
-                  padding: 4,
+                  fontSize: 14,
+                  padding: 2,
                 }}
               >
                 ✕
@@ -205,13 +205,13 @@ export default function KaiBot({ dark }: { dark: boolean }) {
           {/* Transcript History */}
           <div
             style={{
-              padding: "16px 18px",
+              padding: "12px 14px",
               flex: 1,
               overflowY: "auto",
               display: "flex",
               flexDirection: "column",
-              gap: 12,
-              maxHeight: 320,
+              gap: 10,
+              maxHeight: 250,
             }}
           >
             {ctxState.messages.map((msg) => (
@@ -219,13 +219,13 @@ export default function KaiBot({ dark }: { dark: boolean }) {
                 key={msg.id}
                 style={{
                   alignSelf: msg.sender === "user" ? "flex-end" : "flex-start",
-                  maxWidth: "85%",
+                  maxWidth: "90%",
                 }}
               >
                 <div
                   style={{
-                    padding: "10px 14px",
-                    borderRadius: msg.sender === "user" ? "14px 14px 2px 14px" : "14px 14px 14px 2px",
+                    padding: "8px 11px",
+                    borderRadius: msg.sender === "user" ? "12px 12px 2px 12px" : "12px 12px 12px 2px",
                     background:
                       msg.sender === "user"
                         ? dark
@@ -241,8 +241,8 @@ export default function KaiBot({ dark }: { dark: boolean }) {
                         ? "1px solid rgba(201, 168, 76, 0.15)"
                         : "1px solid rgba(0, 0, 0, 0.1)",
                     color: dark ? "#e8e0d0" : "#1a1208",
-                    fontSize: 12,
-                    lineHeight: 1.5,
+                    fontSize: 11,
+                    lineHeight: 1.45,
                     whiteSpace: "pre-wrap",
                   }}
                 >
@@ -255,8 +255,8 @@ export default function KaiBot({ dark }: { dark: boolean }) {
                     style={{
                       display: "flex",
                       flexWrap: "wrap",
-                      gap: 6,
-                      marginTop: 8,
+                      gap: 5,
+                      marginTop: 6,
                     }}
                   >
                     {msg.suggestedFollowups.map((pill) => (
@@ -268,10 +268,10 @@ export default function KaiBot({ dark }: { dark: boolean }) {
                           background: dark ? "rgba(0, 240, 255, 0.08)" : "rgba(0, 240, 255, 0.12)",
                           border: "1px solid rgba(0, 240, 255, 0.3)",
                           color: "#00F0FF",
-                          borderRadius: 20,
-                          padding: "4px 10px",
-                          fontSize: 10,
-                          letterSpacing: "0.05em",
+                          borderRadius: 16,
+                          padding: "3px 8px",
+                          fontSize: 9,
+                          letterSpacing: "0.04em",
                           cursor: "pointer",
                           transition: "all 0.2s",
                         }}
@@ -290,12 +290,12 @@ export default function KaiBot({ dark }: { dark: boolean }) {
           <form
             onSubmit={handleSubmit}
             style={{
-              padding: "12px 16px",
+              padding: "10px 12px",
               borderTop: dark ? "1px solid rgba(201, 168, 76, 0.12)" : "1px solid rgba(0,0,0,0.08)",
               background: dark ? "rgba(10, 10, 14, 0.8)" : "rgba(240, 235, 224, 0.8)",
               display: "flex",
               alignItems: "center",
-              gap: 8,
+              gap: 6,
             }}
           >
             {/* Mic Toggle Button */}
@@ -307,14 +307,15 @@ export default function KaiBot({ dark }: { dark: boolean }) {
                 background: ctxState.isVoiceActive ? "#00FF88" : dark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.08)",
                 border: ctxState.isVoiceActive ? "1px solid #00FF88" : "1px solid transparent",
                 color: ctxState.isVoiceActive ? "#0a0a0f" : dark ? "#e8e0d0" : "#1a1208",
-                borderRadius: 8,
-                width: 36,
-                height: 36,
+                borderRadius: 6,
+                width: 32,
+                height: 32,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 cursor: "pointer",
                 transition: "all 0.2s",
+                fontSize: 12,
               }}
             >
               🎤
@@ -324,15 +325,15 @@ export default function KaiBot({ dark }: { dark: boolean }) {
               type="text"
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
-              placeholder="Ask KAI or type 'Guided Tour'..."
+              placeholder="Ask KAI or 'Guided Tour'..."
               style={{
                 flex: 1,
                 background: dark ? "rgba(0, 0, 0, 0.4)" : "rgba(255, 255, 255, 0.8)",
                 border: dark ? "1px solid rgba(201, 168, 76, 0.2)" : "1px solid rgba(0, 0, 0, 0.15)",
-                borderRadius: 8,
-                padding: "8px 12px",
+                borderRadius: 6,
+                padding: "6px 10px",
                 color: dark ? "#e8e0d0" : "#1a1208",
-                fontSize: 12,
+                fontSize: 11,
                 outline: "none",
               }}
             />
@@ -343,9 +344,9 @@ export default function KaiBot({ dark }: { dark: boolean }) {
                 background: "linear-gradient(135deg, #c0392b, #962d22)",
                 color: "#fff",
                 border: "none",
-                borderRadius: 8,
-                padding: "8px 14px",
-                fontSize: 12,
+                borderRadius: 6,
+                padding: "6px 11px",
+                fontSize: 11,
                 fontWeight: 600,
                 cursor: "pointer",
               }}
@@ -359,19 +360,18 @@ export default function KaiBot({ dark }: { dark: boolean }) {
       {/* ── 2. FLOATING SPEECH BUBBLE (WHEN CLOSED OR NEW MSG) ── */}
       {!ctxState.isChatOpen && showSpeechBubble && latestKaiMessage && (
         <div
-          onClick={() => contextManager.toggleChat()}
           style={{
-            marginBottom: 12,
-            maxWidth: 280,
-            padding: "10px 14px",
-            background: dark ? "rgba(14, 14, 18, 0.92)" : "rgba(250, 246, 238, 0.94)",
+            marginBottom: 8,
+            maxWidth: 215,
+            padding: "7px 10px",
+            background: dark ? "rgba(14, 14, 18, 0.94)" : "rgba(250, 246, 238, 0.96)",
             backdropFilter: "blur(12px)",
             border: "1px solid #00F0FF",
-            borderRadius: 12,
-            boxShadow: "0 8px 30px rgba(0, 240, 255, 0.2)",
+            borderRadius: 10,
+            boxShadow: "0 6px 20px rgba(0, 240, 255, 0.18)",
             color: dark ? "#e8e0d0" : "#1a1208",
-            fontSize: 12,
-            lineHeight: 1.45,
+            fontSize: 10.5,
+            lineHeight: 1.35,
             cursor: "pointer",
             position: "relative",
             animation: "kaiBubblePop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards",
@@ -384,21 +384,45 @@ export default function KaiBot({ dark }: { dark: boolean }) {
             }
           `}</style>
           
-          <div style={{ fontWeight: 700, fontSize: 10, color: "#00F0FF", marginBottom: 3, letterSpacing: "0.1em" }}>
-            KAI ASSISTANT
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 2 }}>
+            <span style={{ fontWeight: 700, fontSize: 9, color: "#00F0FF", letterSpacing: "0.08em" }}>
+              KAI ASSISTANT
+            </span>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowSpeechBubble(false);
+              }}
+              title="Dismiss"
+              style={{
+                background: "none",
+                border: "none",
+                color: dark ? "rgba(232, 224, 208, 0.5)" : "rgba(0,0,0,0.4)",
+                cursor: "pointer",
+                fontSize: 10,
+                padding: "0 2px",
+                lineHeight: 1,
+              }}
+            >
+              ✕
+            </button>
           </div>
-          {latestKaiMessage.text.length > 110
-            ? `${latestKaiMessage.text.substring(0, 110)}...`
-            : latestKaiMessage.text}
+
+          <div onClick={() => contextManager.toggleChat()}>
+            {latestKaiMessage.text.length > 65
+              ? `${latestKaiMessage.text.substring(0, 65)}...`
+              : latestKaiMessage.text}
+          </div>
             
           <div
             style={{
               position: "absolute",
-              bottom: -6,
-              left: 30,
-              width: 10,
-              height: 10,
-              background: dark ? "rgba(14, 14, 18, 0.92)" : "rgba(250, 246, 238, 0.94)",
+              bottom: -5,
+              left: 24,
+              width: 8,
+              height: 8,
+              background: dark ? "rgba(14, 14, 18, 0.94)" : "rgba(250, 246, 238, 0.96)",
               borderRight: "1px solid #00F0FF",
               borderBottom: "1px solid #00F0FF",
               transform: "rotate(45deg)",
@@ -422,8 +446,8 @@ export default function KaiBot({ dark }: { dark: boolean }) {
         <KaiMascotCanvas
           mascotState={ctxState.mascotState}
           audioAmplitude={audioAmp}
-          width={150}
-          height={165}
+          width={125}
+          height={140}
         />
 
         {/* Mascot State Label Badge */}
@@ -434,10 +458,10 @@ export default function KaiBot({ dark }: { dark: boolean }) {
             background: "rgba(10, 10, 14, 0.85)",
             border: "1px solid rgba(201, 168, 76, 0.3)",
             color: dark ? "#e8e0d0" : "#fff",
-            fontSize: 9,
-            padding: "2px 8px",
-            borderRadius: 10,
-            letterSpacing: "0.1em",
+            fontSize: 8,
+            padding: "1px 6px",
+            borderRadius: 8,
+            letterSpacing: "0.08em",
             pointerEvents: "none",
           }}
         >

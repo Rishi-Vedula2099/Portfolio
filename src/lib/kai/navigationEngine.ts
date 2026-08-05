@@ -41,9 +41,34 @@ export const GUIDED_TOUR_STEPS = [
 
 class KaiNavigationEngine {
   private activeTourStepIndex: number | null = null;
+  private tourTimer: any = null;
+
+  private clearTourTimer() {
+    if (this.tourTimer) {
+      clearTimeout(this.tourTimer);
+      this.tourTimer = null;
+    }
+  }
 
   public executeCommand(input: string) {
     const text = input.toLowerCase().trim();
+
+    if (text.includes("end tour") || text.includes("stop tour") || text.includes("finish tour")) {
+      this.endGuidedTour();
+      return;
+    }
+
+    if (text.includes("next tour step") || text.includes("next step")) {
+      this.nextGuidedTourStep();
+      return;
+    }
+
+    // Standard commands stop any running auto tour timer
+    if (!text.includes("guided tour") && !text.includes("take a tour") && !text.includes("start tour") && !text.includes("tour")) {
+      this.clearTourTimer();
+      this.activeTourStepIndex = null;
+      contextManager.updateState({ guidedTourStep: null });
+    }
 
     // 1. Guided Tour Command
     if (
@@ -190,7 +215,9 @@ class KaiNavigationEngine {
     contextManager.setHighlightedSection(sectionId);
     const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
+      const yOffset = -70; // offset for navbar
+      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
     }
     // Remove highlight after 4.5s
     setTimeout(() => {
@@ -209,12 +236,14 @@ class KaiNavigationEngine {
   }
 
   public startGuidedTour() {
+    this.clearTourTimer();
     this.activeTourStepIndex = 0;
     contextManager.updateState({ guidedTourStep: 0 });
     this.executeTourStep(0);
   }
 
   public nextGuidedTourStep() {
+    this.clearTourTimer();
     if (this.activeTourStepIndex === null) return;
     const nextIdx = this.activeTourStepIndex + 1;
     if (nextIdx < GUIDED_TOUR_STEPS.length) {
@@ -227,6 +256,7 @@ class KaiNavigationEngine {
   }
 
   public endGuidedTour() {
+    this.clearTourTimer();
     this.activeTourStepIndex = null;
     contextManager.updateState({ guidedTourStep: null });
     this.speakAndLog(
@@ -237,6 +267,7 @@ class KaiNavigationEngine {
   }
 
   private executeTourStep(stepIdx: number) {
+    this.clearTourTimer();
     const step = GUIDED_TOUR_STEPS[stepIdx];
     this.highlightAndScroll(step.sectionId);
 
@@ -245,12 +276,30 @@ class KaiNavigationEngine {
         ? ["Next Tour Step →", "End Tour"]
         : ["Finish Tour ✓", "Contact Rishi"];
 
+    const onSpeechFinished = () => {
+      if (this.activeTourStepIndex === stepIdx) {
+        this.tourTimer = setTimeout(() => {
+          if (this.activeTourStepIndex === stepIdx) {
+            this.nextGuidedTourStep();
+          }
+        }, 2000);
+      }
+    };
+
     this.speakAndLog(
       `[Tour ${step.title}] ${step.text}`,
       step.sectionId,
       followups,
-      step.speech
+      step.speech,
+      onSpeechFinished
     );
+
+    // Safety fallback timer if voice TTS is muted, slow, or disabled
+    this.tourTimer = setTimeout(() => {
+      if (this.activeTourStepIndex === stepIdx) {
+        this.nextGuidedTourStep();
+      }
+    }, 7500);
   }
 
   private scrollNext() {
@@ -265,11 +314,12 @@ class KaiNavigationEngine {
     text: string,
     navTarget?: string,
     suggestedFollowups?: string[],
-    voiceText?: string
+    voiceText?: string,
+    onSpeechEnd?: () => void
   ) {
     contextManager.addMessage("kai", text, navTarget, suggestedFollowups);
     const { voiceEngine } = require("./voiceEngine");
-    voiceEngine.speak(voiceText || text);
+    voiceEngine.speak(voiceText || text, onSpeechEnd);
   }
 }
 
