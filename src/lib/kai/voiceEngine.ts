@@ -84,49 +84,73 @@ class VoiceEngine {
       return;
     }
 
-    this.synth.cancel();
-    this.stopListening();
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 0.95; // Calm, professional cadence
-    utterance.pitch = 1.0;
-
-    // Pick best English voice if available
-    const voices = this.synth.getVoices();
-    const preferredVoice = voices.find(
-      (v) =>
-        v.lang.startsWith("en") &&
-        (v.name.includes("Google") ||
-          v.name.includes("Natural") ||
-          v.name.includes("Microsoft") ||
-          v.name.includes("Samantha") ||
-          v.name.includes("Daniel"))
-    );
-    if (preferredVoice) {
-      utterance.voice = preferredVoice;
+    // Proactive auto-speech must be blocked if user hasn't interacted with page
+    if (!state.hasUserInteracted) {
+      if (onEnd) onEnd();
+      return;
     }
 
-    utterance.onstart = () => {
-      this.isSpeaking = true;
-      contextManager.setMascotState("talking");
-      this.startAmplitudeSimulation();
-    };
+    try {
+      this.synth.cancel();
+      this.stopListening();
 
-    utterance.onend = () => {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.95; // Calm, professional cadence
+      utterance.pitch = 1.0;
+
+      // Pick best English voice if available
+      let voices: SpeechSynthesisVoice[] = [];
+      try {
+        voices = this.synth.getVoices() || [];
+      } catch (e) {
+        // Safe fallback
+      }
+
+      if (voices.length > 0) {
+        const preferredVoice = voices.find(
+          (v) =>
+            v.lang &&
+            v.lang.startsWith("en") &&
+            (v.name.includes("Google") ||
+              v.name.includes("Natural") ||
+              v.name.includes("Microsoft") ||
+              v.name.includes("Samantha") ||
+              v.name.includes("Daniel"))
+        );
+        if (preferredVoice) {
+          utterance.voice = preferredVoice;
+        }
+      }
+
+      utterance.onstart = () => {
+        this.isSpeaking = true;
+        contextManager.setMascotState("talking");
+        this.startAmplitudeSimulation();
+      };
+
+      utterance.onend = () => {
+        this.isSpeaking = false;
+        this.stopAmplitudeSimulation();
+        contextManager.setMascotState("idle");
+        if (onEnd) onEnd();
+      };
+
+      utterance.onerror = (err) => {
+        console.warn("SpeechSynthesis error:", err);
+        this.isSpeaking = false;
+        this.stopAmplitudeSimulation();
+        contextManager.setMascotState("idle");
+        if (onEnd) onEnd();
+      };
+
+      this.synth.speak(utterance);
+    } catch (err) {
+      console.warn("Voice Engine speak exception:", err);
       this.isSpeaking = false;
       this.stopAmplitudeSimulation();
       contextManager.setMascotState("idle");
       if (onEnd) onEnd();
-    };
-
-    utterance.onerror = () => {
-      this.isSpeaking = false;
-      this.stopAmplitudeSimulation();
-      contextManager.setMascotState("idle");
-      if (onEnd) onEnd();
-    };
-
-    this.synth.speak(utterance);
+    }
   }
 
   public stopSpeaking() {

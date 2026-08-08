@@ -5,15 +5,24 @@ class KaiTriggerSystem {
   private triggeredEvents: Set<string> = new Set();
   private lastTriggerTimestamp: number = Date.now();
   private cooldownMs: number = 20000; // 20s cooldown between proactive auto-speeches
+  private initialized: boolean = false;
+  private idleIntervalId: NodeJS.Timeout | null = null;
 
   public init() {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || this.initialized) return;
+    this.initialized = true;
 
     // Observe scroll position and active sections
     window.addEventListener("scroll", () => this.evaluateScrollTriggers(), { passive: true });
     
-    // Periodically check idle triggers
-    setInterval(() => this.evaluateIdleTriggers(), 3000);
+    // Periodically check idle triggers safely
+    this.idleIntervalId = setInterval(() => {
+      try {
+        this.evaluateIdleTriggers();
+      } catch (e) {
+        console.warn("Idle evaluation error:", e);
+      }
+    }, 3000);
   }
 
   public triggerProjectHover(projectName: string, projectDesc: string) {

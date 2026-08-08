@@ -29,6 +29,7 @@ export interface KaiContextState {
   messages: KaiMessage[];
   guidedTourStep: number | null;
   highlightedSection: string | null;
+  hasUserInteracted: boolean;
 }
 
 type Listener = (state: KaiContextState) => void;
@@ -54,11 +55,13 @@ class KaiContextManager {
     ],
     guidedTourStep: null,
     highlightedSection: null,
+    hasUserInteracted: false,
   };
 
   private listeners: Set<Listener> = new Set();
   private idleInterval: NodeJS.Timeout | null = null;
   private lastActivityTimestamp: number = Date.now();
+  private isTrackingInitialized: boolean = false;
 
   constructor() {
     if (typeof window !== "undefined") {
@@ -77,7 +80,13 @@ class KaiContextManager {
   }
 
   private notify() {
-    this.listeners.forEach((listener) => listener(this.state));
+    this.listeners.forEach((listener) => {
+      try {
+        listener(this.state);
+      } catch (e) {
+        console.warn("Context listener error:", e);
+      }
+    });
   }
 
   public updateState(partialState: Partial<KaiContextState>) {
@@ -141,31 +150,48 @@ class KaiContextManager {
 
   public resetIdleTimer() {
     this.lastActivityTimestamp = Date.now();
+    const updates: Partial<KaiContextState> = {};
+    if (!this.state.hasUserInteracted) {
+      updates.hasUserInteracted = true;
+    }
     if (this.state.idleTimeSeconds !== 0) {
-      this.updateState({ idleTimeSeconds: 0 });
+      updates.idleTimeSeconds = 0;
     }
     if (this.state.mascotState === "sleeping") {
-      this.setMascotState("idle");
+      updates.mascotState = "idle";
+    }
+    if (Object.keys(updates).length > 0) {
+      this.updateState(updates);
     }
   }
 
   private initActivityTracking() {
+    if (this.isTrackingInitialized) return;
+    this.isTrackingInitialized = true;
+
     const onUserActivity = () => this.resetIdleTimer();
     window.addEventListener("mousemove", onUserActivity, { passive: true });
     window.addEventListener("keydown", onUserActivity, { passive: true });
     window.addEventListener("scroll", onUserActivity, { passive: true });
     window.addEventListener("touchstart", onUserActivity, { passive: true });
+    window.addEventListener("click", onUserActivity, { passive: true });
 
     this.idleInterval = setInterval(() => {
-      const idleSecs = Math.floor((Date.now() - this.lastActivityTimestamp) / 1000);
-      if (idleSecs !== this.state.idleTimeSeconds) {
-        this.updateState({ idleTimeSeconds: idleSecs });
-        if (idleSecs > 45 && this.state.mascotState === "idle") {
-          this.setMascotState("sleeping");
+      try {
+        const idleSecs = Math.floor((Date.now() - this.lastActivityTimestamp) / 1000);
+        if (idleSecs !== this.state.idleTimeSeconds) {
+          const updates: Partial<KaiContextState> = { idleTimeSeconds: idleSecs };
+          if (idleSecs > 45 && this.state.mascotState === "idle") {
+            updates.mascotState = "sleeping";
+          }
+          this.updateState(updates);
         }
+      } catch (e) {
+        console.warn("Idle tracking interval error:", e);
       }
     }, 1000);
   }
 }
 
 export const contextManager = new KaiContextManager();
+
